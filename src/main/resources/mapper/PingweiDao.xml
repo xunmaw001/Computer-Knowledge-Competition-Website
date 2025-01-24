@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.PingweiDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.username as username
+        ,a.password as password
+        ,a.pingwei_uuid_number as pingweiUuidNumber
+        ,a.pingwei_name as pingweiName
+        ,a.pingwei_phone as pingweiPhone
+        ,a.pingwei_id_number as pingweiIdNumber
+        ,a.pingwei_photo as pingweiPhoto
+        ,a.sex_types as sexTypes
+        ,a.pingwei_email as pingweiEmail
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.PingweiView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM pingwei  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.username != '' and params.username != null and params.username != 'null' ">
+                and a.username like CONCAT('%',#{params.username},'%')
+            </if>
+            <if test=" params.password != '' and params.password != null and params.password != 'null' ">
+                and a.password like CONCAT('%',#{params.password},'%')
+            </if>
+            <if test=" params.pingweiUuidNumber != '' and params.pingweiUuidNumber != null and params.pingweiUuidNumber != 'null' ">
+                and a.pingwei_uuid_number like CONCAT('%',#{params.pingweiUuidNumber},'%')
+            </if>
+            <if test=" params.pingweiName != '' and params.pingweiName != null and params.pingweiName != 'null' ">
+                and a.pingwei_name like CONCAT('%',#{params.pingweiName},'%')
+            </if>
+            <if test=" params.pingweiPhone != '' and params.pingweiPhone != null and params.pingweiPhone != 'null' ">
+                and a.pingwei_phone like CONCAT('%',#{params.pingweiPhone},'%')
+            </if>
+            <if test=" params.pingweiIdNumber != '' and params.pingweiIdNumber != null and params.pingweiIdNumber != 'null' ">
+                and a.pingwei_id_number like CONCAT('%',#{params.pingweiIdNumber},'%')
+            </if>
+            <if test="params.sexTypes != null and params.sexTypes != ''">
+                and a.sex_types = #{params.sexTypes}
+            </if>
+            <if test=" params.pingweiEmail != '' and params.pingweiEmail != null and params.pingweiEmail != 'null' ">
+                and a.pingwei_email like CONCAT('%',#{params.pingweiEmail},'%')
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
